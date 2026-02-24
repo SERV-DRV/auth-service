@@ -9,6 +9,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApplicationServices(builder.Configuration);
  
+//Configuracion de rutas
+builder.Services.AddControllers();
+
+//Configuracion de servicios por metodo de extension
+builder.Services.AddApplicationServices(builder.Configuration);
+
 var app = builder.Build();
  
 // Configure the HTTP request pipeline.
@@ -19,7 +25,8 @@ if (app.Environment.IsDevelopment())
 }
                                                                                                     
 app.UseHttpsRedirection();
- 
+app.MapControllers();
+
 var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
