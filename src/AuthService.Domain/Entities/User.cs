@@ -40,7 +40,7 @@ public class User
 
     //Relaciones de navegación solo dentro del código
     //Esto no altera la base de datos
-    public UserProfile Profile { get; set;} = null!;
+    public UserProfile UserProfile { get; set;} = null!;
     public ICollection<UserRole> UserRoles { get; set; } = [];
     public UserEmail UserEmail { get; set; } = null!;
     public UserPasswordReset PasswordReset { get; set; } = null!;

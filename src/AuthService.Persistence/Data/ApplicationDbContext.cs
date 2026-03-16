@@ -57,7 +57,7 @@ public class ApplicationDbContext : DbContext
  
             // Relación de 1:1 con UserProfile
             // CORRECCIÓN: Se cambió e.UserProfile por e.Profile
-            entity.HasOne(e => e.Profile)
+            entity.HasOne(e => e.UserProfile)
                 .WithOne(p => p.User)
                 .HasForeignKey<UserProfile>(p => p.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
