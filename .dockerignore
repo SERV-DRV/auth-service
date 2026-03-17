@@ -1,18 +1,14 @@
-touch .dockerignore
-# agrega el nombre de los archivos que que requieras
+**/.git
+**/.gitignore
 
-# Ejemplo de contenido
-# Omitir estos archivos
-.git/
-.gitignore
-Dockerfile
-.dockerignore
+**/bin
+**/obj
+**/.vs
+**/.vscode
+**/*.user
+**/*.suo
+
+**/node_modules
+
 README.md
 LICENSE
-
-# Omitir directorios de desarrollo
-node_modules/  # Si usas Node.js
-
-# Archivos temporales
-*.tmp
-*.temp

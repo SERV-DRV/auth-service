@@ -17,7 +17,7 @@ public class JwtTokenService(IConfiguration configuration) : IJwtTokenService
         var secretKey = jwtSettings["SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey not configured");
         var issuer = jwtSettings["Issuer"] ?? "AuthDotnet";
         var audience = jwtSettings["Audience"] ?? "AuthDotnet";
-        var expiryInMinutes = int.Parse(jwtSettings["ExpiryInMinutes"] ?? "30");
+        var expiryInMinutes = int.Parse(jwtSettings["ExpiryInMinutes"] ?? "240");
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
