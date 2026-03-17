@@ -1,11 +1,9 @@
-namespace AuthService.Domain.Constants
-{
-    public class RoleConstants
-    {
-        public const string ADMIN_ROLE = "ADMIN_ROLE";
-        public const string USER_ROLE = "USER_ROLE";
+namespace AuthService.Domain.Constants;
 
-        // This array can be used to validate roles when creating or updating users
-        public static readonly string[] AllowedRoles = { ADMIN_ROLE, USER_ROLE };
-    }
+public class RoleConstants
+{
+    public const string ADMIN_ROLE = "ADMIN_ROLE";
+    public const string USER_ROLE = "USER_ROLE";
+    public static readonly string[] AllowedRoles = { ADMIN_ROLE, USER_ROLE };
+
 }

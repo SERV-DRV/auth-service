@@ -40,8 +40,9 @@ public class ApplicationDbContext : DbContext
                 }
             }
         }
-
+        //* --------------------------------------------------------
         //* CONFIGURACIÓN DE ENTIDADES Y RELACIONES
+        //* --------------------------------------------------------
 
         // --------------------------------------------------------
         // CONFIGURACIÓN ESPECÍFICA DE LA ENTIDAD USERS
@@ -57,7 +58,7 @@ public class ApplicationDbContext : DbContext
 
             // Relación de 1:1 con UserProfile
             entity.HasOne(e => e.UserProfile)
-                .WithOne(p => p.User)
+                .WithOne(p => p.Users)
                 .HasForeignKey<UserProfile>(p => p.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
@@ -66,7 +67,7 @@ public class ApplicationDbContext : DbContext
                 .WithOne(e => e.User)
                 .HasForeignKey(e => e.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
-
+            
             // Relación 1:1 con UserEmail
             entity.HasOne(e => e.UserEmail)
                 .WithOne(ue => ue.User)

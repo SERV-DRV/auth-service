@@ -28,8 +28,7 @@ public class EmailService(IConfiguration configuration, ILogger<EmailService> lo
 
         await SendEmailAsync(email, subject, body);
     }
-
-    public async Task SendPasswordResetEmailAsync(string email, string username, string token)
+    public async Task SendPasswordResetAsync(string email, string username, string token)
     {
         var subject = "Reset your password";
         var resetUrl = $"{configuration["AppSettings:FrontendUrl"]}/reset-password?token={token}";
@@ -94,6 +93,7 @@ public class EmailService(IConfiguration configuration, ILogger<EmailService> lo
             }
 
             // Avoid logging sensitive SMTP details
+
             var port = int.Parse(portString ?? "587");
 
             using var client = new SmtpClient();
@@ -152,7 +152,6 @@ public class EmailService(IConfiguration configuration, ILogger<EmailService> lo
                 logger.LogError(ex, "Failed to send email");
                 throw;
             }
-
             logger.LogInformation("Email processed");
         }
         catch (Exception ex)
@@ -170,4 +169,5 @@ public class EmailService(IConfiguration configuration, ILogger<EmailService> lo
             throw new InvalidOperationException($"Failed to send email: {ex.Message}", ex);
         }
     }
+
 }

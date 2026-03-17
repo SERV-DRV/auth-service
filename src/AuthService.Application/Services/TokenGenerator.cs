@@ -21,6 +21,6 @@ public static class TokenGenerator
         return Convert.ToBase64String(bytes)
             .Replace("+", "-")
             .Replace("/", "_")
-            .Replace("=", "");
+            .TrimEnd('=');
     }
 }

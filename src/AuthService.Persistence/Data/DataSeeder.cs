@@ -16,11 +16,11 @@ public static class DataSeeder
             {
                 new() {
                     Id = UuidGenerator.GenerateRoleId(),
-                    Name = RoleConstants.ADMIN_ROLE
+                        Name = RoleConstants.ADMIN_ROLE
                 },
                 new() {
                     Id = UuidGenerator.GenerateRoleId(),
-                    Name = RoleConstants.USER_ROLE
+                        Name = RoleConstants.USER_ROLE
                 }
             };
 
@@ -52,7 +52,7 @@ public static class DataSeeder
                     //Password = passwordHasher.HashPassword("Admin1234!"),
                     Password = "12345678",
                     Status = true,
-                    UserProfile = new UserProfile // CORREGIDO AQUÍ: Era UserProfile y pasó a Profile
+                    UserProfile = new UserProfile
                     {
                         Id = profileId,
                         UserId = userId,

@@ -8,39 +8,36 @@ public class User
     [MaxLength(16)]
     public string Id { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Name is required.")]
+    [Required(ErrorMessage = "El nombre es obligatorio.")]
     [MaxLength(25)]
     public string Name { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Surname is required.")]
-    [MaxLength(16)]
+    [Required(ErrorMessage = "El apellido es obligatorio.")]
+    [MaxLength(25)]
     public string Surname { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Username is required.")]
+    [Required]
     [MaxLength(50)]
     public string Username { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Email is required.")]
-    [EmailAddress(ErrorMessage = "Invalid email format.")] // The value of this property must have an email format.
+    [Required]
+    [EmailAddress]
     public string Email { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Password is required.")]
+    [Required]
     [MinLength(255)]
     public string Password { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Status is required.")]
-    [MaxLength(25)]
+    [Required]
     public bool Status { get; set; } = true;
 
-    [Required]
     public DateTime CreatedAt { get; set; }
-
-    [Required]
     public DateTime UpdatedAt { get; set; }
+    
+    public virtual UserProfile UserProfile { get; set; } = null!; 
 
-    // Relationships
-    public UserProfile UserProfile { get; set; } = null!;
-    public ICollection<UserRole> UserRoles { get; set; } = [];
-    public UserEmail UserEmail { get; set; } = null!;
-    public UserPasswordReset UserPasswordReset { get; set; } = null!;
+    public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
+
+    public virtual UserPasswordReset UserPasswordReset { get; set; } = null!;
+    public virtual UserEmail UserEmail { get; set; } = null!;
 }
