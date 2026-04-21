@@ -1,12 +1,13 @@
 using AuthService.Api.Extensions;
-using AuthService.Persistence.Data;
-using Microsoft.EntityFrameworkCore;
 using AuthService.Api.Middlewares;
 using AuthService.Api.ModelBinders;
+using AuthService.Persistence.Data;
+using Microsoft.EntityFrameworkCore;
 using NetEscapades.AspNetCore.SecurityHeaders.Infrastructure;
 using Serilog;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,12 +53,20 @@ builder.Services.AddSecurityOptions();
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-// .....................................................
+builder.Services.AddSwaggerGen(options =>
+{
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    if (File.Exists(xmlPath))
+    {
+        options.IncludeXmlComments(xmlPath);
+    }
+});
+// .................................................
 
 
 
-var app = builder.Build(); 
+var app = builder.Build();
 
 
 // CONFIGURACIÓN DE HTTP request pipeline

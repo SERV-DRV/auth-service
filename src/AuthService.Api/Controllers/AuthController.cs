@@ -1,4 +1,4 @@
-using System;
+    using System;
 using AuthService.Application.DTOs;
 using AuthService.Application.DTOs.Email;
 using AuthService.Application.Interfaces;
@@ -12,6 +12,10 @@ namespace AuthService.Api.Controllers;
 [Route("api/v1/[controller]")]
 public class AuthController(IAuthService authService) : ControllerBase
 {
+    /// <summary>
+    /// Obtiene el perfil del usuario autenticado. Requiere un token JWT válido en la cabecera Authorization.
+    /// </summary>
+    /// <returns></returns>
     [HttpGet("profile")]
     [Authorize]
     public async Task<ActionResult<object>> GetProfile()
@@ -35,6 +39,11 @@ public class AuthController(IAuthService authService) : ControllerBase
         });
     }
 
+    /// <summary>
+    /// Obtiene el perfil de un usuario por su ID. Requiere un token JWT válido en la cabecera Authorization.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost("profile/by-id")]
     [EnableRateLimiting("ApiPolicy")]
     public async Task<ActionResult<object>> GetProfileById([FromBody] GetProfileByIdDto request)
@@ -66,6 +75,11 @@ public class AuthController(IAuthService authService) : ControllerBase
         });
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="registerDto">Nombre del usuario</param>
+    /// <returns></returns>
     [HttpPost("register")]
     [RequestSizeLimit(10 * 1024 * 1024)] // 10MB límite
     [EnableRateLimiting("AuthPolicy")]

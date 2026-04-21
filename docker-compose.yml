@@ -1,30 +1,42 @@
 services:
-  db:
+  postgres-db:
     image: postgres:16-alpine
-    container_name: auth-db
+    container_name: authservice-postgres
     environment:
-      POSTGRES_DB: authdb
-      POSTGRES_USER: authuser
-      POSTGRES_PASSWORD: authpass
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
     ports:
-      - "5432:5432"
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U authuser -d authdb"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d auth_db"]
       interval: 5s
       timeout: 5s
-      retries: 20
+      retries: 10
 
-  api:
-    image: auth-service:main
-    container_name: auth-service
-    depends_on:
-      db:
-        condition: service_healthy
+  auth-service:
+    build:
+      context: .
+      dockerfile: src/Dockerfile
+    container_name: authservice-api
     ports:
-      - "5001:8080"
+      - "5065:8080"
     environment:
-      ASPNETCORE_URLS: http://+:8080
-      ASPNETCORE_ENVIRONMENT: Development
-      # OJO: aquí hay que poner el connection string correcto para TU app
-      # Si tu app usa "ConnectionStrings:DefaultConnection", esto funciona:
-      ConnectionStrings__DefaultConnection: Host=db;Port=5432;Database=authdb;Username=authuser;Password=authpass
+      - ConnectionStrings__DefaultConnection=Host=postgres-db;Port=5432;Database=auth_db;Username=postgres;Password=admin
+
+      - ASPNETCORE_ENVIRONMENT=Development
+
+      - ASPNETCORE_URLS=http://+:8080
+
+      - JwtSettings__SecretKey=clavesecreta123
+      - JwtSettings__Issuer=AuthService
+      - JwtSettings__Audience=AuthService
+      - JwtSettings__ExpiryInHours=24
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
