@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  # 1. Base de datos para el AuthService (.NET)
+  postgres-db:
+    image: postgres:16-alpine
+    container_name: auth-service-postgres
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d auth_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # 2. Base de datos para el Node.js (ServerAdmin)
+  mongo-db:
+    image: mongo:latest
+    container_name: server-admin-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+
+  # 3. Microservicio de Autenticación (.NET)
+  auth-service:
+    build: 
+      context: ./auth-service
+      dockerfile: src/Dockerfile
+    container_name: auth-service
+    ports:
+      - "5065:8080"
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=postgres-db;Port=5432;Database=auth_db;Username=postgres;Password=admin
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - JwtSettings__SecretKey=clavesecreta123_MySuperSecretKey2026!
+      - JwtSettings__Issuer=AuthService
+      - JwtSettings__Audience=AuthService
+      - JwtSettings__ExpiryInHours=24
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+
+  # 4. API de Administrador (Node.js)
+  server-admin:
+    build:
+      context: ./server-admin
+      dockerfile: Dockerfile
+    container_name: server-admin
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - URI_MONGODB=mongodb://mongo-db:27017/kinalSports
+    depends_on:
+      - mongo-db
+
+  # 5. Cliente Admin (React/Vite)
+  client-admin:
+    build:
+      context: ./client-admin
+      dockerfile: Dockerfile
+      args:
+        - VITE_AUTH_URL=http://localhost:5065
+        - VITE_ADMIN_URL=http://localhost:3001/kinalSportAdmin/v1
+    container_name: client-admin
+    ports:
+      - "5173:80"
+    depends_on:
+      - auth-service
+      - server-admin
+
+volumes:
+  pgdata:
+  mongodata:
